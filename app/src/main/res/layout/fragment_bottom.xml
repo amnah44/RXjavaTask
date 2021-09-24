@@ -4,11 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#93BF95"
-    tools:context=".fragment.BottomFragment">
+    tools:context=".ui.fragment.BottomFragment">
 
     <TextView
         android:id="@+id/showTyping"
         android:hint="Show Typing"
+        android:paddingTop="32sp"
         android:gravity="top|center"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

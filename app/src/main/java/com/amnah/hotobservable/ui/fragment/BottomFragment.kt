@@ -1,4 +1,4 @@
-package com.amnah.hotobservable.fragment
+package com.amnah.hotobservable.ui.fragment
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -6,12 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.amnah.hotobservable.databinding.FragmentBottomBinding
+import com.amnah.hotobservable.ui.fragment.TopFragment.Companion.subject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import java.util.concurrent.TimeUnit
 
 class BottomFragment : Fragment() {
 
     private lateinit var binding: FragmentBottomBinding
 
-    //    val disposable = CompositeDisposable()
+    private val disposable = CompositeDisposable()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -22,8 +27,19 @@ class BottomFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.showTyping.text = arguments?.getString("TEXT")
 
+        disposable.add(
+            subject.observeOn(AndroidSchedulers.mainThread())
+                .debounce(1500, TimeUnit.MILLISECONDS)
+                .subscribe { string ->
+                    binding.showTyping.text = string
+                }
+        )
+    }
+
+    override fun onDestroy() {
+        disposable.dispose()
+        super.onDestroy()
     }
 
 }
